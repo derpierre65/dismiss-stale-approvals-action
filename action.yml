@@ -1,0 +1,30 @@
+name: 'Dismiss stale approvals'
+description: 'Dismiss approvals on a pull request if the diff has changed'
+author: 'derpierre65'
+
+inputs:
+  github-token:
+    description:
+      'A GITHUB_TOKEN secret or PAT that has write access to the repository'
+    required: true
+  fetch-depth:
+    default: 250
+    description:
+      'The maximum length of a branch from head to base that will be compared to the previous run. If the branch is longer than this number, reviews will always be dismissed.'
+    required: false
+  re-request:
+    default: true
+    description: 'Dismiss reviews if the diff has changed and re-request them.'
+    required: false
+  show-summary:
+    default: true
+    description: 'Show a summary of the reviews that were dismissed and the git diff.'
+    required: false
+  dismiss-message:
+    default: 'A reapproval is required when changes are made.'
+    description: 'Dismiss reviews with a custom message.'
+    required: false
+
+runs:
+  using: 'node20'
+  main: 'action/index.js'
