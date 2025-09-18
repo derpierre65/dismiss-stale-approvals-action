@@ -16,9 +16,17 @@ inputs:
     default: true
     description: 'Dismiss reviews if the diff has changed and re-request them.'
     required: false
+  ignore-bots:
+    default: true
+    description: 'Ignore reviews by bots.'
+    required: false
   show-summary:
     default: true
     description: 'Show a summary of the reviews that were dismissed and the git diff.'
+    required: false
+  dismiss-change-requested:
+    default: false
+    description: 'Dismiss change-requested reviews.'
     required: false
   dismiss-message:
     default: 'A reapproval is required when changes are made.'

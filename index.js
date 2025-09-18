@@ -13,6 +13,8 @@ const fetchDepth = core.getInput('fetch-depth');
 const shouldReRequest = core.getInput('re-request');
 const dismissMessage = core.getInput('dismiss-message');
 const showSummary = core.getInput('show-summary');
+const ignoreBots = core.getInput('ignore-bots');
+const dismissChangeRequested = core.getInput('dismiss-change-requested');
 
 // setup
 const artifact = new DefaultArtifactClient();
@@ -79,10 +81,18 @@ async function removeReviews() {
 
     const dismissals = [];
     const rerequestReviewers = [];
+    const dismissStates = [
+        'APPROVED',
+    ];
+
+    if (dismissChangeRequested) {
+        dismissStates.push('CHANGES_REQUESTED');
+    }
+
     for (const review of Object.values(latestReviewByUser)) {
         core.info(`-> Review ${review.id} | user. ${review.user.login} | state: ${review.state} | ${review.submitted_at}`);
 
-        if (review.state !== 'APPROVED') {
+        if ((ignoreBots && review.user.type === 'Bot') || !dismissStates.includes(review.state)) {
             continue;
         }
 
@@ -93,7 +103,7 @@ async function removeReviews() {
         }));
     }
 
-    return Promise.all(dismissals).then(() => {
+    return Promise.allSettled(dismissals).then(() => {
         if (!shouldReRequest) {
             return Promise.resolve(rerequestReviewers);
         }
