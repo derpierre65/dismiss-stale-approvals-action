@@ -72,9 +72,7 @@ async function removeReviews() {
     const latestReviewByUser = {};
     const reviews = await getReviews();
     for (const review of reviews) {
-        if (!latestReviewByUser[review.user.id]) {
-            latestReviewByUser[review.user.id] = review;
-        } else if (latestReviewByUser[review.user.id].submitted_at < review.submitted_at) {
+        if (!latestReviewByUser[review.user.id] || latestReviewByUser[review.user.id].submitted_at < review.submitted_at) {
             latestReviewByUser[review.user.id] = review;
         }
     }
@@ -82,6 +80,8 @@ async function removeReviews() {
     const dismissals = [];
     const rerequestReviewers = [];
     for (const review of Object.values(latestReviewByUser)) {
+        core.info(`-> Review ${review.id} | user. ${review.user.login} | state: ${review.state} | ${review.submitted_at}`);
+
         if (review.state !== 'APPROVED') {
             continue;
         }
