@@ -10,11 +10,11 @@ const artifactName = 'stale-approvals-shas';
 // get inputs
 const githubToken = core.getInput('github-token');
 const fetchDepth = core.getInput('fetch-depth');
-const shouldReRequest = core.getInput('re-request');
+const shouldReRequest = core.getInput('re-request').toLowerCase() === 'true';
 const dismissMessage = core.getInput('dismiss-message');
-const showSummary = core.getInput('show-summary');
-const ignoreBots = core.getInput('ignore-bots');
-const dismissChangeRequested = core.getInput('dismiss-change-requested');
+const showSummary = core.getInput('show-summary').toLowerCase() === 'true';
+const ignoreBots = core.getInput('ignore-bots').toLowerCase() === 'true';
+const dismissChangeRequested = core.getInput('dismiss-change-requested').toLowerCase() === 'true';
 
 // setup
 const artifact = new DefaultArtifactClient();
